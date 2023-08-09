@@ -13,18 +13,28 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    // position du joueur au à l'ecran
+    public final int screenX;
+    public final int screenY;
+
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        // on fixe la position du joueur comme étant fixe au centre de la caméra
+        screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
+
         this.setDefaults();
+        getPlayerImage();
     }
 
     public void setDefaults(){
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 23;
+        worldY = gp.tileSize * 21;
         speed = 4;
         direction = "down";
-        getPlayerImage();
     }
 
     public void getPlayerImage(){
@@ -44,21 +54,21 @@ public class Player extends Entity {
 
     public void update(){
         if (isKeyPressed()){
-            if(keyH.upPressed == true){
+            if(keyH.upPressed){
                 direction = "up";
-                y -= speed;
+                worldY -= speed;
             }
-            if(keyH.downPressed == true){
+            if(keyH.downPressed){
                 direction = "down";
-                y += speed;
+                worldY += speed;
             }
-            if(keyH.leftPressed == true){
+            if(keyH.leftPressed){
                 direction = "left";
-                x -= speed;
+                worldX -= speed;
             }
-            if(keyH.rightPressed == true){
+            if(keyH.rightPressed){
                 direction = "right";
-                x += speed;
+                worldX += speed;
             }
             spriteCounter ++;
             if(spriteCounter > 10){
@@ -73,7 +83,7 @@ public class Player extends Entity {
     }
 
     private boolean isKeyPressed(){
-        return (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true);
+        return (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed);
     }
 
     public void draw(Graphics2D g2){
@@ -114,7 +124,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image,x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image,screenX, screenY, gp.tileSize, gp.tileSize, null);
 
     }
 }
